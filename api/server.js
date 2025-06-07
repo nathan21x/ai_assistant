@@ -5,7 +5,8 @@ import { Blob } from 'node-fetch';
 import { FormData } from 'node-fetch';
 import dotenv from 'dotenv';
 import { readFile } from 'fs/promises';
-
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
 dotenv.config();
 
@@ -27,7 +28,12 @@ app.use(express.json());
 app.post('/api/ask_api', async (req, res) => {
     const { user_id, question } = req.body;
 
-    const data = await readFile('config.json', 'utf-8');
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+
+    const filePath = resolve(__dirname, './api/config.json');
+
+    const data = await readFile(filePath, 'utf-8');
 
     const client = new OpenAI({
         apiKey: process.env.OPEN_API_KEY
