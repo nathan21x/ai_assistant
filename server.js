@@ -10,7 +10,7 @@ import { readFile } from 'fs/promises';
 dotenv.config();
 
 const app = new express();
-const port = 3000;
+const port = 80;
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
