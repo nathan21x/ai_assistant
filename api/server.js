@@ -27,7 +27,7 @@ app.use(express.json());
 app.post('/api/ask_api', async (req, res) => {
     const { user_id, question } = req.body;
 
-    const data = await readFile('config.json', 'utf-8');
+    const data = await readFile('./api/config.json', 'utf-8');
 
     const client = new OpenAI({
         apiKey: process.env.OPEN_API_KEY
