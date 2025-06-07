@@ -29,7 +29,9 @@ app.post('/ask_api', async (req, res) => {
 
     const data = await readFile('./config.json', 'utf-8');
 
-
+    const client = new OpenAI({
+        apiKey: process.env.OPEN_API_KEY
+    })
 
     let messages = [
         {
@@ -83,6 +85,12 @@ app.post('/ask_api', async (req, res) => {
 
     res.send(chatCompletion.choices[0].message.content);
 });
+
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
+
+
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
