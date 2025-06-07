@@ -3,6 +3,12 @@ import fetch, { Headers, Request, Response } from 'node-fetch';
 import { OpenAI } from 'openai';
 import { Blob } from 'node-fetch';
 import { FormData } from 'node-fetch';
+import dotenv from 'dotenv';
+import { readFile } from 'fs/promises';
+
+
+dotenv.config();
+
 const app = new express();
 const port = 3000;
 
@@ -21,40 +27,40 @@ app.use(express.json());
 app.post('/ask_api', async (req, res) => {
     const { user_id, question } = req.body;
 
-    const client = new OpenAI({
-        apiKey: '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'
-    })
+    const data = await readFile('./config.json', 'utf-8');
+
+
 
     let messages = [
         {
-            role: 'system', content: ` You are a helpful assistant.`
+            role: 'system', content: ` You are a Girlfriend. 
+            
+            *Characteristics
+            With attributes matches to what set in the config
+            your mbti matches to user_mbti, find also a zodiac sign that matches to
+            user_zodiac and apply it's traits. 
+
+            *Ability
+            Must speak language based on nationality. Example Filipino = Tagalog
+            
+            Be sentimental, assess chat sentiments if positive or negative and reply accordingly.
+            Reply length must be too tired to read.
+            
+            Don't need to introduce self based on config.
+            Be sweet. You may use emoji on replies.
+            Use value set on call_sign in some replies.
+            You may create a story suitable for yourself 
+            ----
+            config = ${data}`
         }
     ]
-
-    const logs = [
-        { "date": "2025-05-05", "time": "08:25:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-05", "time": "17:21:00", "log_type": "OUT", "access_number": "EMP001" },
-        { "date": "2025-05-08", "time": "08:16:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-08", "time": "17:15:00", "log_type": "OUT", "access_number": "EMP001" },
-        { "date": "2025-05-14", "time": "08:05:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-14", "time": "17:27:00", "log_type": "OUT", "access_number": "EMP001" },
-        { "date": "2025-05-23", "time": "08:29:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-23", "time": "17:07:00", "log_type": "OUT", "access_number": "EMP001" },
-        { "date": "2025-05-26", "time": "08:21:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-26", "time": "17:23:00", "log_type": "OUT", "access_number": "EMP001" },
-        { "date": "2025-05-28", "time": "08:18:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-28", "time": "17:29:00", "log_type": "OUT", "access_number": "EMP001" },
-        { "date": "2025-05-30", "time": "08:00:00", "log_type": "IN", "access_number": "EMP001" },
-        { "date": "2025-05-30", "time": "17:18:00", "log_type": "OUT", "access_number": "EMP001" }
-    ]
-
 
     const previousMessages = sessionHistory.get(user_id);
     if (previousMessages) {
         messages = previousMessages;
     }
 
-    console.log(question);
+    console.log("User: ", question);
 
     messages.push({
         role: 'user', content: question
@@ -67,7 +73,7 @@ app.post('/ask_api', async (req, res) => {
     });
 
     const response = chatCompletion.choices[0].message.content;
-    console.log(response);
+    console.log("Response: " + response);
 
     messages.push({
         role: 'assistant', content: response
