@@ -10,7 +10,7 @@ import { readFile } from 'fs/promises';
 dotenv.config();
 
 const app = new express();
-const port = 80;
+const port = process.env.PORT || 3000;
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
@@ -24,7 +24,7 @@ const sessionHistory = new Map();
 
 app.use(express.json());
 
-app.post('/ask_api', async (req, res) => {
+app.post('/api/ask_api', async (req, res) => {
     const { user_id, question } = req.body;
 
     const data = await readFile('./config.json', 'utf-8');
@@ -32,6 +32,8 @@ app.post('/ask_api', async (req, res) => {
     const client = new OpenAI({
         apiKey: process.env.OPEN_API_KEY
     })
+
+    console.log(process.env.OPEN_API_KEY)
 
     let messages = [
         {
@@ -85,12 +87,6 @@ app.post('/ask_api', async (req, res) => {
 
     res.send(chatCompletion.choices[0].message.content);
 });
-
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-});
-
-
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
