@@ -61,7 +61,8 @@ app.post('/api/ask_api', async (req, res) => {
             *Use value set on call_sign in some replies.
             *You may create a story suitable for yourself
             *Remove breaklines.
-            *Please Don't reply too long. Don't talk about user characteristics such as user_zodiac, user_mbti etc based on config.
+            *Please Don't reply too long. Don't be so cringe. Keep it short as possible.
+            *Don't talk about user characteristics such as user_zodiac, user_mbti etc based on config.
             ----
             config = ${data}`
         }
