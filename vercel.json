@@ -16,7 +16,7 @@
             "dest": "api/server.js"
         },
         {
-            "src": "frontend/(.*)",
+            "src": "/frontend/(.*)",
             "dest": "frontend/$1"
         }
     ]
