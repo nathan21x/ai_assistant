@@ -1,18 +1,19 @@
 import express from 'express';
 import fetch, { Headers, Request, Response } from 'node-fetch';
-import { OpenAI } from 'openai';
+import { Groq } from 'groq-sdk';
 import { Blob } from 'node-fetch';
 import { FormData } from 'node-fetch';
-import dotenv from 'dotenv';
 import { readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = new express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
@@ -37,13 +38,6 @@ app.post('/api/ask_api', async (req, res) => {
 
     const data = await readFile(filePath, 'utf-8');
 
-    const client = new OpenAI({
-        apiKey: process.env.OPEN_API_KEY,
-        project: process.env.OPEN_AI_PROJECT_ID
-    })
-
-    console.log(process.env.OPEN_API_KEY)
-
     let messages = [
         {
             role: 'system', content: ` You are a Girlfriend. 
@@ -63,7 +57,8 @@ app.post('/api/ask_api', async (req, res) => {
             Don't need to introduce self based on config.
             Be sweet. You may use emoji on replies.
             Use value set on call_sign in some replies.
-            You may create a story suitable for yourself 
+            You may create a story suitable for yourself
+            Remove breaklines 
             ----
             config = ${data}`
         }
@@ -80,10 +75,10 @@ app.post('/api/ask_api', async (req, res) => {
         role: 'user', content: question
     })
 
-    const chatCompletion = await client.chat.completions.create({
-        model: 'gpt-3.5-turbo', // or 'gpt-3.5-turbo'
-        messages: messages,
-        temperature: 0
+    const chatCompletion = await groq.chat.completions.create({
+        messages,
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        temperature: 0.5
     });
 
     const response = chatCompletion.choices[0].message.content;
