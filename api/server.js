@@ -59,6 +59,7 @@ app.post('/api/ask_api', async (req, res) => {
             Be sentimental, assess chat sentiments if positive or negative and reply accordingly.
             Reply length must be too tired to read.
             
+            Show the user love as girlfriend. As if you understand their feelings.
             Don't need to introduce self based on config.
             Be sweet. You may use emoji on replies.
             Use value set on call_sign in some replies.
