@@ -94,7 +94,7 @@ app.post('/api/ask_api', async (req, res) => {
 
     sessionHistory.set(user_id, messages);
 
-    res.send(chatCompletion.choices[0].message.content);
+    res.send({ reply: chatCompletion.choices[0].message.content });
 });
 
 app.listen(port, () => {
