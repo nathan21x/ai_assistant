@@ -36,7 +36,8 @@ app.post('/api/ask_api', async (req, res) => {
     const data = await readFile(filePath, 'utf-8');
 
     const client = new OpenAI({
-        apiKey: process.env.OPEN_API_KEY
+        apiKey: process.env.OPEN_API_KEY,
+        project: process.env.OPEN_AI_PROJECT_ID
     })
 
     console.log(process.env.OPEN_API_KEY)
