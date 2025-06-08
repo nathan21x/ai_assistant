@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ globalThis.FormData = FormData;
 const sessionHistory = new Map();
 
 app.use(express.json());
+app.use(cors());
 
 app.post('/api/ask_api', async (req, res) => {
     const { user_id, question } = req.body;
