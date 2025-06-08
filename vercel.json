@@ -4,12 +4,19 @@
         {
             "src": "api/server.js",
             "use": "@vercel/node"
+        },
+        {
+            "src": "frontend/next.config.ts"
         }
     ],
     "routes": [
         {
-            "src": "/(.*)",
+            "src": "/api/(.*)",
             "dest": "api/server.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/$1"
         }
     ]
 }
