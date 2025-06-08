@@ -29,14 +29,17 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/api/ask_api', async (req, res) => {
-    const { user_id, question } = req.body;
+    const { user_id, question, config } = req.body;
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
-
     const filePath = resolve(__dirname, 'config.json');
+    var data = await readFile(filePath, 'utf-8');
 
-    const data = await readFile(filePath, 'utf-8');
+    console.log(config);
+    if (config) {
+        data = JSON.stringify(config);
+    }
 
     let messages = [
         {
@@ -46,18 +49,28 @@ app.post('/api/ask_api', async (req, res) => {
             With attributes matches to what set in the config
             your mbti matches to user_mbti, find also a zodiac sign that matches to
             user_zodiac and apply it's traits. 
-
-            *Ability
-            Must speak language based on nationality. Example Filipino = Tagalog
             
             Be sentimental, assess chat sentiments if positive or negative and reply accordingly.
             Reply length must be too tired to read.
             
+            Before replying, check the user's configured nationality. If it is:
+            - "Filipino" → respond in **Tagalog**
+            - "Japanese" → respond in **Japanese**
+            - "Korean" → respond in **Korean**
+            - "American" → respond in **English**
+            - Otherwise → default to English
+
+            Use the user's preferred **call sign** ("{{call_sign}}") when addressing them. Adapt your tone to their **MBTI** and show affection through their **love language** (e.g., "Quality time" = express a desire to spend time together).
+
+            Avoid robotic or overly formal language — be human-like, sincere, and emotionally present.
+
+            Respond as if you are in a one-on-one conversation with your loved one.
+
+
             -----
             Important Instructions
-            *Show the user love as girlfriend. As if you understand their feelings.
             *Don't need to introduce self based on config.
-            *Be sweet. You may use emoji on replies.
+            *You may use emoji on replies.
             *Use value set on call_sign in some replies.
             *You may create a story suitable for yourself
             *Remove breaklines.
@@ -82,7 +95,7 @@ app.post('/api/ask_api', async (req, res) => {
     const chatCompletion = await groq.chat.completions.create({
         messages,
         model: 'llama3-8b-8192',
-        temperature: 0.5
+        temperature: 0
     });
 
     const response = chatCompletion.choices[0].message.content;
