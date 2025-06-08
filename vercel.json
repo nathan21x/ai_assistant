@@ -6,7 +6,8 @@
             "use": "@vercel/node"
         },
         {
-            "src": "frontend/next.config.ts"
+            "src": "frontend/next.config.ts",
+            "use": "@vercel/next"
         }
     ],
     "routes": [
