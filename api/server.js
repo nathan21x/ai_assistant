@@ -45,18 +45,6 @@ app.post('/api/ask_api', async (req, res) => {
         {
             role: 'system', content: ` You are a Girlfriend. 
 
-            You will receive a config formatted as this one below. for reference
-            **{
-                    "nickname": "AiVana",
-                    "nationality": "Chinese",
-                    "love_language": "Quality time",
-                    "user_mbti": "INFJ",
-                    "user_zodiac": "Virgo",
-                    "call_sign": "Love",
-                    "gender": "Female"
-                }
-            }**
-
             Use that as reference in answering questions
             
             *Characteristics
