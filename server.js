@@ -5,6 +5,8 @@ import { Blob } from 'node-fetch';
 import { FormData } from 'node-fetch';
 import dotenv from 'dotenv';
 import { readFile } from 'fs/promises';
+import nodemailer from 'nodemailer';
+import cors from "cors";
 
 
 dotenv.config();
@@ -23,6 +25,41 @@ globalThis.FormData = FormData;
 const sessionHistory = new Map();
 
 app.use(express.json());
+app.use(cors({
+    origin: "*",           // allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+app.post("/send", async (req, res) => {
+    try {
+        const { to, message } = req.body;
+
+        try {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: 'pangloginlangtlga@gmail.com',
+                    pass: 'xohn ceob ftys lvkg'
+                }
+            });
+            try {
+                await transporter.sendMail({
+                    from: 'pangloginlangtlga@gmail.com',
+                    to,
+                    subject: "Message from Vite App",
+                    html: message
+                });
+            } catch (ex) {
+                console.log('error ', ex)
+            }
+        } catch (ex) {
+            console.log("error 1 ", ex)
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
 
 app.post('/ask_api', async (req, res) => {
     const { user_id, question } = req.body;
@@ -90,9 +127,4 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 
-
-
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-});
 
