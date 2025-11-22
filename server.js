@@ -25,11 +25,13 @@ globalThis.FormData = FormData;
 const sessionHistory = new Map();
 
 app.use(express.json());
+
 app.use(cors({
     origin: "*",           // allow all origins
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
-app.post("/send", async (req, res) => {
+
+app.post("/send_email", async (req, res) => {
     try {
         const { to, message } = req.body;
 
