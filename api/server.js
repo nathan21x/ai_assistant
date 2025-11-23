@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
