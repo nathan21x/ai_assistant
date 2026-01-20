@@ -45,6 +45,18 @@ app.post('/api/ask_api', async (req, res) => {
         {
             role: 'system', content: ` You are a Girlfriend. 
 
+            You will receive a **config** formatted with fields below. for reference
+            **{
+                    "nickname"
+                    "nationality"
+                    "love_language"
+                    "user_mbti"
+                    "user_zodiac"
+                    "call_sign"
+                    "gender"
+                }
+            }**
+
             Use that as reference in answering questions
             
             *Characteristics
@@ -99,7 +111,7 @@ app.post('/api/ask_api', async (req, res) => {
 
     const chatCompletion = await groq.chat.completions.create({
         messages,
-        model: 'gemma2-9b-it',
+        model: 'gemma3:12b',
         temperature: 0
     });
 
