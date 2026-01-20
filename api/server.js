@@ -144,7 +144,7 @@ app.post('/api/ask_api', async (req, res) => {
 
     const chatCompletion = await groq.chat.completions.create({
         messages,
-        model: 'gemma3:12b',
+        model: 'gpt-oss-20B',
         temperature: 0
     });
 
