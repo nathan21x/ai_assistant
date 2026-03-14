@@ -7,14 +7,16 @@ import { readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
+
 
 dotenv.config();
 
 const app = new express();
 const port = process.env.PORT || 3001;
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const CryptoJS = require("crypto-js");
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
@@ -29,23 +31,40 @@ const sessionHistory = new Map();
 app.use(express.json());
 app.use(cors());
 
+decrypt = (str) => {
+    return CryptoJS.AES.encrypt(text, secretKey).toString();
+}
+
 app.post("/api/send_email", async (req, res) => {
     try {
-        const { to, message } = req.body;
+        var strFrom = 'pangloginlangtlga@gmail.com';
+        var strSubject = 'Message from Vite App';
+
+        const { from, to, subject, message, smtpDetails } = req.body;
+        const emailConfig = decrypt(smtpDetails);
+        const defaultEmailConfig = {
+            service: "gmail",
+            auth: {
+                user: 'pangloginlangtlga@gmail.com',
+                pass: 'xohn ceob ftys lvkg'
+            }
+        }
+
+        if (from) {
+            strFrom = from;
+        }
+
+        if (subject) {
+            strSubject = to;
+        }
 
         try {
-            const transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                    user: 'pangloginlangtlga@gmail.com',
-                    pass: 'xohn ceob ftys lvkg'
-                }
-            });
+            const transporter = nodemailer.createTransport(emailConfig ?? defaultEmailConfig);
             try {
                 await transporter.sendMail({
-                    from: 'pangloginlangtlga@gmail.com',
+                    from: strFrom,
                     to,
-                    subject: "Message from Vite App",
+                    subject: strSubject,
                     html: message
                 });
             } catch (ex) {
